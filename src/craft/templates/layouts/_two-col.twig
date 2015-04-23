@@ -1,0 +1,52 @@
+<div class="two-col clearfix">
+    <div class="col col-left">
+        <!--TYPO3SEARCH_begin-->
+        <div class="content">
+            {% block leftColContent %}
+
+            {% endblock %}
+        </div>
+    </div>
+    <div class="col col-right">
+        <div class="content">
+            <nav class="mbxl" id="auxiliary">
+                <ul class="plain horizontal social">
+                    {% for block in siteConfig.plazmSocial.type('social') %}
+                        <li class="twitter">
+                            <a href="{{ block.twitter }}" target="_top">
+                                <span style="display: none">Plazm on Twitter</span>
+                            </a>
+                        </li>
+                        <li class="facebook">
+                            <a href="{{ block.facebook }}" target="_top">
+                                <span style="display: none">Plazm on Facebook</span>
+                            </a>
+                        </li>
+                        {#{{ block.text|markdown }}#}
+                    {% endfor %}
+
+                    {% for block in siteConfig.plazmSocial.social %}
+
+                        {% if block.type == 'social' %}
+
+                        {%  endif %}
+                    {% endfor %}
+
+
+
+                </ul>
+                <form class="search" action="search/" method="get" accept-charset="utf-8">
+                    <input class="tx-solr-q"
+                           type="text"
+                           name="tx_solr[q]"
+                           value=""><input
+                            type="hidden" name="id" value="25"><input type="hidden" name="L" value="0"><input
+                            type="submit" value="">
+                </form>
+            </nav>
+            {% block rightColContent %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>

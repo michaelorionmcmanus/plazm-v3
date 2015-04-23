@@ -1,0 +1,119 @@
+{% extends "layouts/_two-col" %}
+
+{% block leftColContent %}
+  {% set hasHeroImage = entry.heroImage.assets.total() > 0 %}
+  {% set heroCrop = {
+      mode: 'fit',
+      width: 715,
+      quality: 75,
+    }
+  %}
+  {% if hasHeroImage %}
+    <img src="{{ entry.heroImage.assets.0.url(heroCrop) }}" alt="" style="max-width: 100%"/>
+  {% endif %}
+
+  <h1 class="{{ hasHeroImage ?: 'mtn' }}">{{ entry.title }}</h1>
+  {% if entry.subtitle %}
+    <h2>{{ entry.subtitle }}</h2>
+  {% endif %}
+
+  {% for block in entry.articleContent %}
+    {% if block.type == "text" %}
+      {% if block.enabled %}
+        {{ block.text }}
+      {% endif %}
+    {% endif %}
+    {% if block.type == "imageOnly" %}
+      {% if block.enabled %}
+        {% for image in block.image.assets %}
+          <img src="{{ image.url }}" alt="" style="max-width: 100%"/>
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  {#<p>#}
+    {#<i>Mackey, Robert: &quot;Divide and Quit.&quot; Plazm Magazine, Issue #29. Winter, 2007: Posted online to#}
+      {#plazm.org on February 24, 2013. URL:#}
+      {#http://staging.plazm.org/publications/plazm-magazine/plazm-29-collective-memory/divide-and-quit/.</i>#}
+  {#</p>#}
+{% endblock %}
+
+{% block rightColContent %}
+  <div class="title-box red-border">
+    <div class="header">
+      <a href="{{ entry.parent.parent.url }}">{{ entry.parent.parent.title }}</a>
+    </div>
+  </div>
+  <div class="callout">
+    <h3>
+      <a href="{{ entry.parent.url }}">{{ entry.parent.title }}</a>    </h3>
+    <hr>
+    {% if entry.originalPrintSpreads.blocks.total() > 0 %}
+      <ul class="plain vertical">
+        <li class="galleryContainer mvs">
+          <a class="big-link printSpread" href="">View Original Print Spread</a>
+          {% for page in entry.originalPrintSpreads.type('page') %}
+            <a class="originalImages" style="display: none" rel="printSpread" href="{{ page.image.assets.0.url }}"></a>
+          {% endfor %}
+        </li>
+      </ul>
+
+
+      <a class="printSpread" href="">
+        <img alt="Spread" src="{{ entry.originalPrintSpreads.type('page').0.image.assets.0.url }}" width="150" height="100">
+      </a>
+    {% endif %}
+  </div>
+  <div class="callout plain-text">
+    <h3 class="mts">About This Story</h3>
+    <hr>
+    {% if entry.contributors %}
+      <h4 class="mbxs mts">Contributors</h4>
+      <ul class="plain vertical">
+        {% for contributor in entry.contributors %}
+          <li>{% if contributor.role %} <b>{{ contributor.role }}:</b> {% endif %}{{ contributor.byline }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="mvm">
+      Published Online: {{ entry.postDate|date("M d, Y") }}
+    </div>
+  </div>
+
+  <nav class="articles">
+    {% if entry.prevSibling %}
+      <div class="control left"><a href="{{ entry.prevSibling.url }}"></a></div>
+    {% endif %}
+    {% if entry.nextSibling %}
+      <div class="control right {{ entry.prevSibling ?: 'no-previous' }}"><a href="{{ entry.nextSibling.url }}"></a></div>
+    {% endif %}
+  </nav>
+{% endblock %}
+
+{#<h1>{{entry.title}}</h1>#}
+
+{#{{ entry.parent.parent.parent }}#}
+
+{#{% for block in entry.contributors %}#}
+  {#{% if block.type == "contributors" %}#}
+    {#{%  if block.enabled %}#}
+      {#<h3>{{ block.role }}</h3>#}
+      {#<h3>{{ block.byline }}</h3>#}
+    {#{% endif %}#}
+  {#{% endif %}#}
+{#{% endfor %}#}
+
+{#{% for block in entry.articleContent %}#}
+  {#{% if block.type == "text" %}#}
+    {#{%  if block.enabled %}#}
+     {#{{ block.text }}#}
+    {#{% endif %}#}
+  {#{% endif %}#}
+  {#{% if block.type == "imageOnly" %}#}
+    {#{%  if block.enabled %}#}
+      {#{% for image in block.image.assets %}#}
+        {#<img src="{{ image.url }}" alt="" style="max-width: 100%"/>#}
+      {#{% endfor %}#}
+    {#{% endif %}#}
+  {#{% endif %}#}
+{#{% endfor %}#}

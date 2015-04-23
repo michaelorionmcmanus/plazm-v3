@@ -1,0 +1,17 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "michaelorionmcmanus/plazm-craft",
+    "Update": "true"
+  },
+  "Authentication": {
+    "Bucket": "plazm-craft",
+    "Key": "docker/.dockercfg"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "80"
+    }
+  ],
+  "Logging": "/var/log/eb/"
+}

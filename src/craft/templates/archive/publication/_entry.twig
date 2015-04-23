@@ -1,0 +1,62 @@
+{% extends "layouts/_two-col" %}
+
+{% block leftColContent %}
+    <div class="title-box white red-border">
+        <div class="header"><h1>{{ entry.title }}</h1></div>
+        {% if entry.body %}
+            <div class="content">
+                {{ entry.body }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="two-col half">
+        {% for issue in entry.children %}
+            <div>
+                <h2><a class="more" href="publications/plazm-magazine/plazm-29-collective-memory/">{{ issue.title }}</a>
+                </h2>
+
+                <div class="two-col half">
+                    <div class="two-col half">
+                        {% for article in issue.children.limit(4) %}
+                            <div class="col col-{{ cycle(['left','right'],loop.index0) }}">
+                                <div class="content">
+
+                                    {% set teaserImage = article.previewImage.assets.total() > 0 %}
+                                    <div class="archive-teaser {{ teaserImage ?: 'no-image' }}">
+                                        {% if teaserImage %}
+                                            <img src="{{ article.previewImage.assets.0.url }}" width="348" height="200"
+                                                 alt="">
+                                        {% endif %}
+                                        <h3>
+                                            <a href="{{ article.url }}">
+                                                {{ article.title }}
+                                            </a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <a class="more" href="{{ issue.url }}">All Articles ></a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block rightColContent %}
+    <div class="callout big-text mtxl">
+        <h3>Publication Archive</h3>
+        <hr>
+
+        <ul class="plain vertical">
+            {% for publication in craft.entries.section('archive').type('publication') %}
+                {% set active = publication.slug == entry.slug ? 'active' %}
+                <li class="sub {{ active }}"><a href="{{ publication.url }}"
+                                                class="sub {{ active }}">{{ publication.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+{% endblock %}

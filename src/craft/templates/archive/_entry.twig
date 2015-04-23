@@ -1,0 +1,11 @@
+{% extends "_base" %}
+
+{% block content %}
+    {%  if entry.type == 'article' %}
+        {% include 'archive/article/_entry' %}
+    {%  elseif entry.type == 'issue' %}
+        {% include 'archive/issue/_entry' %}
+    {%  elseif entry.type == 'publication' %}
+        {% include 'archive/publication/_entry' %}
+    {% endif %}
+{% endblock %}
