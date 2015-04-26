@@ -10,8 +10,15 @@
     {% set templateBaseUrl = siteUrl ~ 'template' %}
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="{{ templateBaseUrl }}/styles/main.css">
-    <script src="{{ templateBaseUrl }}/scripts/vendor/modernizr.js"></script>
+
+    {#<link rel="stylesheet" href="{{ templateBaseUrl }}/styles/main.css">#}
+    <link rel="stylesheet" href="/assets/css/main.css">
+
+    {% if craft.config.devMode %}
+        <script src="http://127.0.0.1:35729/livereload.js?snipver=1" ></script>
+    {% endif %}
+
+    <script src="/assets/static/modernizr.js"></script>
 
 
     <base href="{{ templateBaseUrl }}/">

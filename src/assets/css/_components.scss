@@ -1,0 +1,1014 @@
+/* =============================================================================
+ MIXINS
+ ========================================================================== */
+
+@mixin big-text {
+  font: {
+    family: $letter-gothic-stack;
+    size: 1.05em;
+    weight: normal;
+  }
+  line-height: 1.3em;
+  text-transform: uppercase;
+}
+
+// Media queries
+// --------------------------------------------------------
+// Respond to viewport size
+// $size -> viewport size
+// $fallback -> 'true' or 'false'
+// $operator -> 'min' or 'max'
+// $aspect -> 'width' or 'height'
+// --------------------------
+@mixin respond($size, $fallback: true, $operator: min, $aspect: width) {
+  @media all and (#{$operator}-#{$aspect}: $size) {
+    @content;
+  }
+  @if $fallback == true {
+    .no-mediaqueries & {
+      @content;
+    }
+  }
+}
+
+// Tripundra
+// ------
+// ------
+// ------
+// --------------------------
+@mixin tripundra($color, $weight, $width, $height) {
+  // Reset default <button> styles
+  background: transparent;
+  border: none;
+  padding: 0;
+  // Apply the sacred ash
+  display: block;
+  width: $width;
+  height: $height;
+  border-top: $weight solid $color;
+  border-bottom: $weight solid $color;
+  position: relative;
+  &:before {
+    content: "";
+    display: block;
+    width: 100%;
+    border-top: $weight solid $color;
+    position: absolute;
+    top: (($height - ($weight * 2)) / 2 ) - ($weight / 2);
+    left: 0;
+  }
+}
+
+// Clearfix
+// $mode accepts 'light' or 'heavy'
+// 'light' is sufficient for clearing floats, while 'heavy' is required to prevent margin collapsing
+// --------------------------
+@mixin clearfix($mode: heavy) {
+  @if $mode == heavy {
+    &:before,
+    &:after {
+      content: " ";
+      display: table;
+    }
+    &:after {
+      clear: both;
+    }
+  }
+  @else {
+    &:after {
+      content: " ";
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+/* =============================================================================
+   BASE
+   ========================================================================== */
+
+html,
+body,
+p {
+  font-family: $garamond-stack;
+}
+
+body {
+  min-width: 320px;
+  background-color: $background;
+  &.nav-open {
+      position: fixed;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+  }
+}
+
+#logo,
+h1, h2, h3, h4, h5, h6 {
+  font-family: $letter-gothic-stack;
+  text-transform: uppercase;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+/* =============================================================================
+   LAYOUT
+   ========================================================================== */
+
+/** CONTAINER **/
+#container {
+  max-width: $contentWidth;
+  padding: 10px;
+  box-shadow: $navWidth 0 0 0 transparentize($brown, 0.1);
+  transition: $duration -webkit-transform ease;
+  transition: $duration transform ease;
+  .nav-open & {
+    -webkit-transform: translateX(-$navWidth) translateZ(0);
+    -ms-transform: translateX(-$navWidth) translateZ(0);
+    transform: translateX(-$navWidth) translateZ(0);
+  }
+  @include respond($ladoga) {
+    box-shadow: none;
+    padding: 15px;
+    margin: 0 auto;
+    .nav-open & {
+      transform: translateX(0);
+    }
+  }
+  @include respond($erie) {
+    max-width: $containerWidth;
+  }
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+/** LISTS **/
+ul.plain {
+  list-style-type: none;
+  display: inline-block;
+}
+
+ul.horizontal li {
+  display: block;
+  float: left;
+  margin-right: 15px;
+  &.last {
+    margin-right: 0;
+  }
+}
+
+ul.plain.vertical {
+  margin: 0;
+  padding: 0;
+  &, li {
+    width: 100%;
+  }
+}
+
+ul.vertical {
+  li {
+    clear: both;
+    float: left;
+  }
+}
+
+/** HEADER **/
+header {
+  display: block;
+  nav {
+    display: block;
+    margin-bottom: 10px;    
+  }
+  nav {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+
+.two-col {
+  .col {
+    width: 100%;
+  }
+  @include respond($erie) {
+    @include clearfix;
+    margin-top: 15px;
+    .col {
+      float: left;
+    }
+    .col-left {
+      width: 72.284%;
+    }
+    .col-right {
+      width: 27.716%;
+      box-sizing: border-box;
+      padding-left: 20px;
+      .block {
+        margin: 15px 0;
+      }
+    }
+    &.article-header {
+      margin-top: 0;
+    }
+  }
+}
+
+.col-left {
+  .content {
+    a {
+      text-decoration: underline;
+      &:hover {
+        background: white;
+      }
+      img {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
+
+.two-col.half {
+  $space: 15px;
+  @include respond($ladoga) {
+    @include clearfix;
+    .col {
+      width: calc(50% - (#{$space} / 2));
+      float: left;
+    }
+    .col-left {
+      margin-right: $space;
+    }
+    .col-right {
+      padding-left: 0;
+    }
+  }
+  .no-csscalc & {
+    .col {
+      width: 48.5%;
+    }
+    .col-left {
+      margin-right: 3%;
+    }
+  }
+}
+
+#auxiliary {
+  padding-top: 20px;
+  border-top: 1px solid $grayDark;
+  margin-top: 20px;
+  @include respond($balkhash) {
+    form,
+    .tx-solr {
+      float: right;
+    }
+  }
+  @include respond($erie) {
+    padding-top: 0;
+    border-top: none;
+    margin-top: 0;
+    form,
+    .tx-solr {
+      float: none;
+    }
+  }
+}
+
+/** SEARCH **/
+#container #tx-solr-search-functions,
+#container #tx-solr-search {
+  width: 100%;
+}
+
+#container #tx-solr-search {
+  float: none;
+}
+
+#container #tx-solr-search-functions {
+  width: 100%;
+  float: none;
+}
+
+#container #tx-solr-search .results-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+#resultsPerPage {
+  margin-bottom: 10px;
+}
+
+/* =============================================================================
+   MODULE
+   ========================================================================== */
+.callout {
+  .col-right & {
+    margin-bottom: 15px;
+    h3 {
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+    hr {
+      margin: 5px 0 8px 0;
+    }
+    a {
+      &.big-link {
+        text-transform: uppercase;
+        font-family: $letter-gothic-stack;
+        font-size: 110%;
+      }
+      &.active {
+        color: red;
+      }
+    }
+  }
+}
+
+.printSpread {
+  &:focus {
+    outline: 0;
+  }
+}
+
+.mfp-bg {
+  background-color: $brown;
+  opacity: 0.9;
+}
+
+#tx-solr-search-functions ul li	a,
+#tx-solr-search-functions ul li {
+  text-transform: uppercase;
+  font-family: $letter-gothic-stack;
+  /*font-size: 110%;*/
+}
+
+#tx-solr-search-functions {
+  h3, h4, h5 {
+    margin: 0;
+    margin-bottom: 7px;
+  }
+  hr {
+    margin: 5px 0;
+  }
+}
+
+#tx-solr-search-functions ul ul {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  margin-bottom: 7px;
+  list-style-type: none;
+}
+
+.archive-teaser {
+  width: 100%;
+  max-width: 348px;
+  position: relative;
+  margin: 0 auto 25px;
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  h3 {
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    a {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-decoration: none !important;
+      padding: 30px 16px;
+    }
+  }
+  /** Teaser without image **/
+  &.no-image {
+    min-height: 200px;
+    background: white;
+    h3 {
+      visibility: visible;
+      color: black;
+      background: white;
+      a {
+        color: black;
+      }
+    }
+  }
+  @include respond($ladoga) {
+    max-width: none;
+  }
+  @include respond($ontario) {
+    .archive-teaser.expanded {
+      .info {
+        float: right;
+        width: 45%;
+      }
+    }
+  }
+}
+
+.callout {
+  .col-left & {
+    img {
+      margin-bottom: 1.2em;
+    }
+  }
+  .col-left .content & {
+    p {
+      margin-top: .9em
+    }
+  }
+}
+
+.archive-teaser.no-image:hover,
+.archive-teaser:hover {
+  a, h3 {
+    visibility: visible;
+    cursor: pointer;
+    text-decoration: none;
+    background: transparent;
+  }
+  h3 {
+    background: #3C2415;
+    background: rgba(60,36,21,.90);
+
+  }
+  a {
+    color: white;
+    &:hover {
+      background: transparent !important;
+    }
+
+  }
+}
+
+.archive-teaser.expanded {
+  max-width: 100%;
+  position: static;
+  h3 {
+    width: auto;
+    position: static;
+    visibility: visible;
+    clear: both;
+    background: none;
+    padding: 10px 0;
+    /*display: inline-block;*/
+    a {
+      color: $grayDark;
+      padding: 0;
+    }
+  }
+  img {
+    position: static;
+    float: left;
+  }
+}
+
+nav.articles {
+  text-align: center;
+  .control a {
+    display: block;
+    font-family: $letter-gothic-stack;
+    text-transform: uppercase;
+    font-size: 2em;
+    background-image: url(/assets/images/issue-nav-sprite.png);
+  }
+  .close {
+    float: left;
+    display: block;
+    background:position;
+    a {
+      width: 50px;
+      height: 60px;
+    }
+  }
+  .left,
+  .right {
+    display: inline-block;
+    vertical-align: top;
+    a {
+      width: 25px;
+      height: 59px;
+    }
+  }
+  .left {
+    a {
+      background-position: -160px 0px;
+    }
+  }
+  .right {
+    margin-left: 37px;
+    a {
+      background-position: -224px 0px;
+    }
+  }
+  .no-previous {
+    margin-left: 5px;
+  }
+  @include respond($ontario) {
+    margin-bottom: 35px;
+    margin-top: 15px;
+    .control {
+      font-family: $letter-gothic-stack;
+      font-size: 5em;
+    }
+    // .close {
+    //   float: left;
+    // }
+    // .left,.right {
+    //   float: left;
+    // }
+  }
+  @include respond($erie) {
+    // .control a {
+    //   display: block;
+    // }
+    .left,
+    .right {
+      display: block;
+      float: left;
+    }
+  }
+}
+
+ul.social {
+  margin-bottom: 10px;
+  a {
+    display: block;
+    width: 23px;
+    height: 23px;
+  }
+  .twitter a {
+    background: url(/assets/images/logo-twitter.gif) no-repeat;
+  }
+  .facebook a {
+    background: url(/assets/images/logo-facebook.gif) no-repeat;
+  }
+  li {
+    margin-right: 0;
+  }
+  li + li {
+    margin-left: 5px;
+  }
+}
+
+.title-box {
+  width: 100%;
+  display: block;
+  .header, .content {
+    margin: 35px 20px 15px 20px;
+  }
+  .col-right & {
+    .header, .content {
+      margin: 0;
+    }
+  }
+  .content {
+    margin-top: 0px;
+  }
+}
+/* PAGE SPECIFIC MODS */
+body.publication {
+  h2 {
+    font-size: 2em;
+    font-weight: normal;
+  }
+}
+
+
+/* =============================================================================
+   THEME
+   ========================================================================== */
+.big-text, .big-text p, .big-text ul, .big-text ul li a{
+  @include big-text;
+}
+
+h3 {
+  .col-left & {
+    font-size: 1.3em;
+  }
+}
+
+.csc-default {
+  .col-right & {
+    padding: 5px;
+    background: white;
+    p {
+      display: inline;
+    }
+  }
+}
+
+/** identity **/
+#logo {
+  font-size: 18px;
+  font-weight: normal;
+  float: left;
+  @include respond($ladoga) {
+    font-size: 28px;
+    margin-top: 36px;
+    float: left;
+  }
+}
+
+/** navs **/
+nav#primary, nav#footer {
+  font-family: letter-gothic-std;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+nav#footer {
+  margin-bottom: 50px;
+  font-size: 15px;
+  a {
+    &:hover {
+      background: none;
+      color: #000;
+    }
+  }
+}
+
+nav#primary {
+  $space: 10px;
+  @include clearfix;
+  padding: 3px 0 12px;
+  ul,
+  .dropdown {
+    padding-right: $space;
+    padding-left: $space;
+  }
+  > ul {
+    box-sizing: border-box;
+    width: $navWidth;
+    height: 100vh;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    > li + li {
+      padding-top: $space;
+    }    
+    a {
+      color: #fff;
+    }
+  }
+  .dropdown {
+    display: block;
+    padding-top: ($space / 2);
+    li {
+      padding-top: ($space / 2);
+    }
+  }
+  @include respond($ladoga) {
+    padding: 0;
+    ul,
+    .dropdown {
+      padding-right: 0;
+      padding-left: 0;
+    }
+    > ul {
+      width: auto;
+      height: auto;
+      font-size: 16px;
+      padding: 34px 0 0;
+      float: right;
+      overflow: visible;
+      position: static;
+      > li {
+        height: 16px;
+        line-height: 16px;
+        padding: $space;
+        float: left;
+        position: relative;
+        &:hover {
+          cursor: pointer;
+          > a:hover {
+            text-decoration: none;
+          }
+        }
+      }
+      > li + li {
+        padding-top: $space;
+      }    
+      a {
+        color: $grayDark;
+      }
+    }
+    li {
+      &:hover {
+        background: #3C2415;
+        background: rgba(60,36,21,.90);
+        a {
+          color: white;
+        }
+        .dropdown {
+          display: block;
+        }
+      }
+      .dropdown {
+        display: none;
+        font-size: 14px;
+        padding: 25px;
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        top: 36px;
+        background: #3C2415;
+        background: rgba(60,36,21,.90);
+        a {
+          color: white;
+        }
+        .header {
+          text-decoration: underline;
+        }
+        ul {
+          display: inline-block;
+          width: 200px;
+          font-size: 14px;
+          list-style-type: none;
+          margin-top: 15px;
+          li {
+            width: 100%;
+            &:hover {
+              background: none;
+            }
+            a {
+              &:hover {
+                background: none;
+              }
+            }
+          }
+          a {
+            &.header {
+              text-decoration: underline;
+            }
+          }
+        }
+        .group {
+          float: left;
+        }
+      }
+    }
+  }
+}
+
+// button
+.toggler-container {
+  padding: 0 10px 10px 10px;
+  float: right;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: -10px;
+}
+.toggler {
+  @include tripundra($grayDark, 2px, 20px, 16px);
+  margin-top: 2px;
+  float: right;
+  @include respond($ladoga) {
+    display: none;
+  }
+}
+
+.nav-overlay {
+  display: none;
+  cursor: pointer;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  .nav-open & {
+    display: block;
+  }
+}
+
+a:visited,
+a:active,
+a {
+  color: $grayDark;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.2;
+  .col-left .content & {
+    font-size: 1.4em;
+    line-height: 1.4;
+    margin: 1.5em 0;
+  }
+}
+
+a.important {
+  color: red;
+}
+
+a.more {
+  font-family: $letter-gothic-stack;
+  font-size: 1em;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  padding: 5px 3px 3px 3px;
+  .callout & {
+    font-size: 1.5em;
+    text-decoration: none;
+  }
+}
+
+a.more:hover {
+  text-decoration: underline;
+}
+
+form.search {
+  $height: 22px;
+  $buttonWidth: 80px;
+  background: white;
+  position: relative;
+  input {
+    box-sizing: border-box;
+    display: inline-block;
+    &:focus {
+      outline: 0;
+    }
+  }
+  input[type='text'] {
+    width: 100%;
+    height: $height;
+    font-size: 14px;
+    font-family: $letter-gothic-stack;
+    text-transform: uppercase;
+    color: $grayDark;
+    background: none;
+    padding: 2px ($buttonWidth + 4px) 2px 4px;
+    border: none;
+  }
+  input[type='submit'] {
+    border: none;
+    width: $buttonWidth;
+    height: $height;
+    vertical-align: top;
+    background: #fff url(/assets/images/search-submit.gif) no-repeat 0 25%;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+#resultsPerPage {
+  label {
+    margin-right: 10px;
+  }
+}
+
+.tx-pagebrowse-pi1,
+#tx-solr-results-meta {
+  p,
+  li {
+    font-family: $letter-gothic-stack;
+  }
+  .more {
+    display: inline-block;
+    margin-top: 2.4em;
+  }
+}
+
+.tx-pagebrowse-pi1 {
+  color: #999;
+  a {
+    color: #000;
+  }
+  .tx-pagebrowse-current {
+    font-style: italic;
+  }
+}
+
+hr.mast-divider {
+  margin: 0 0 20px;
+  @include respond($ladoga) {
+    margin: 1em 0;
+  }
+}
+
+.two-col {
+  .col-right {
+    .block{
+
+    }
+    .callout {
+      p {
+        font-family: $letter-gothic-stack;
+        text-transform: uppercase;
+      }
+      &.plain-text {
+        text-transform: none;
+      }
+      text-transform: uppercase;
+    }
+  }
+}
+
+.title-box {
+  .content {
+    text-transform: uppercase;
+  }
+  .header {
+    font-weight: normal;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: $letter-gothic-stack;
+    color: red;
+    h1 {
+      font-size: 1em;
+      font-weight: normal;
+    }
+  }
+  .col-right & {
+    .header {
+      font-size: 16px;
+      &, 
+      a {
+        color: red;
+      }
+    }
+  }
+  & p,
+  .col-left &,
+  .col-left & p {
+    font-size: 1em;
+    font-family: $letter-gothic-stack;
+  }
+  &.white {
+    background: white;
+    display: inline-block;
+  }
+  &.red-border {
+    border-left: solid red 10px;
+    margin-bottom: 35px;
+    margin-left: -10px;
+  }
+  .col-right &.red-border {
+    box-sizing: border-box;
+    border-left: solid red 30px;
+    padding-left: 10px;
+    margin-left: 0;
+  }
+  @include respond($ladoga) {
+    &.red-border {
+      border-left: solid red 25px;
+      margin-left: -25px;
+    }
+    .col-left .header {
+      font-size: 26px;
+    }
+    & p,
+    .col-left &,
+    .col-left & p {
+      font-size: 1.1em;
+    }
+  }
+}
+
+div.csc-textpic div.csc-textpic-imagewrap .csc-textpic-image .csc-textpic-caption {
+  padding: 5px 0 0 0;
+}
+
+div.csc-textpic.csc-textpic-intext-left-nowrap .csc-textpic-image,
+div.csc-textpic.csc-textpic-intext-left .csc-textpic-imagewrap .csc-textpic-image {
+  margin-top: 2.5em;
+}
+
+div.csc-textpic-intext-right-nowrap div.csc-textpic-imagewrap {
+  float: right;
+  clear: both;
+}
+
+div.csc-default {
+  @include clearfix;
+}

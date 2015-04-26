@@ -6,3 +6,5 @@
 db
 content
 .idea
+node_modules
+src/assets/bower
